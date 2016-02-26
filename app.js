@@ -1,15 +1,14 @@
 var express = require('express');
-var app = express();
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 
-// var mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost/todoDB');
+var app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -26,6 +25,11 @@ app.use(session({
 app.get('/', index.home);
 // app.post('/add', index.add);
 // app.post('/remove', index.remove);
+
+
+mongoose.connect('mongodb://wiki:olinjs@ds017678.mlab.com:17678/wiki', function(err){
+	if(err) console.log(err);
+});
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {

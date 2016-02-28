@@ -53,8 +53,8 @@ app.post("/createuser", login.POSTlogin);
 app.get('/allpages', pages.GETallPages);
 app.get('/page/:id', pages.GETpage);
 app.post('/submitpage', pages.POSTsubmit);
-app.post('/editpage', pages.POSTedit);
-app.delete('/deletepage', pages.DELETEpage);
+app.post('/editpage/:id', pages.POSTedit);
+app.delete('/deletepage/:id', pages.DELETEpage);
 
 
 

@@ -1,15 +1,35 @@
 var mongoose = require('mongoose');
 var path = require('path');
 
-var GETlogin = function(req, res){
-	res.end();
+var Article = require('../models/articleModel.js');
+var User = require('../models/userModel.js');
+
+var routes = {};
+
+routes.GETlogin = function(req, res){
+	var id = req.params.id;
+
+	User.findOne({'_id' : id}, function(err,user){
+		if (err) {
+	      res.sendStatus(500);
+	      return;
+	    }
+
+	    if (!user) {
+	      res.json({"error":"user not found"});
+	      return;
+	    }
+	    else {
+	    	//get specific user and send json
+      		res.json(user);
+      		return;
+	    }
+	})
 };
 
-module.exports.GETlogin = GETlogin;
 
-var POSTlogin = function(req, res){
+routes.POSTlogin = function(req, res){
 	res.json({message:'Login successful'});
-	//res.json({message:'Login unsuccessful'});
 };
 
-module.exports.POSTlogin = POSTlogin;
+module.exports = routes;

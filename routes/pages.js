@@ -1,32 +1,122 @@
 var mongoose = require('mongoose');
 var path = require('path');
 
-var GETallPages = function(req, res){
-	res.end();
+var Article = require('../models/articleModel.js');
+var User = require('../models/userModel.js');
+
+var routes = {};
+
+routes.GETallPages = function(req, res){
+	//Get All Pages Sorted by title
+	Article.find().sort({'title': 'desc'}).exec(function(err, articles) {
+		if (err) {
+			res.sendStatus(500);
+			return;
+		}
+
+		if (!articles) {
+			res.json({"error":"articles not found"});
+			return;
+		}
+      	else {
+      		res.json(articles); //send all of the articles
+      		return;
+      	}
+    })
 };
 
-module.exports.GETallPages = GETallPages;
 
-var GETpage = function(req, res){
-	res.end();
+routes.GETpage = function(req, res){
+	var id = req.params.id;
+
+	Article.findOne({'_id' : id}, function(err,article){
+		if (err) {
+	      res.sendStatus(500);
+	      return;
+	    }
+
+	    if (!article) {
+	      res.json({"error":"article not found"});
+	      return;
+	    }
+	    else {
+	    	//get specific article and send json
+      		res.json(article);
+      		return;
+	    }
+	})
 };
 
-module.exports.GETpage = GETpage;
 
-var POSTsubmit = function(req, res){
-	res.end();
+routes.POSTsubmit = function(req, res){
+	var b = req.body;
+
+	var article = new Article();
+	article.title = b.title;
+	article.content = b.content;
+	article.datePosted = new Date();
+
+	article.save(function(err) {
+	    if (err) {
+	     	res.sendStatus(500);
+	      	return;
+	    }
+	    else {
+	    	res.json(article);
+	    	return;
+	    }
+	})
 };
 
-module.exports.POSTsubmit = POSTsubmit;
 
-var POSTedit = function(req, res){
-	res.end();
+routes.POSTedit = function(req, res){
+	var b = req.body;
+	var id = req.params.id;
+
+	Article.findOne({'_id' : id}, function(err,article){
+		if (err) {
+	      res.sendStatus(500);
+	      return;
+	    }
+
+	    if (!article) {
+	      res.json({"error":"article not found"});
+	      return;
+	    }
+	    else {
+	      //For all of the keys given, check if they are empty, if not change the ingredient to have that info, and save
+	      for(var key in req.body) {
+	        if(req.body.hasOwnProperty(key)){
+	          if (b[key] != ""){
+	            article[key] = b[key]
+	          }
+	        }
+	      }
+	      //save edited todo
+	      article.save(function(err) {
+	        if (err) {
+	          res.sendStatus(500);
+	          return;
+	        }
+	        res.sendStatus(200);
+	        return;
+	      })
+	    }
+	})
 };
 
-module.exports.POSTedit = POSTedit;
 
-var DELETEpage = function(req, res){
-	res.end();
+routes.DELETEpage = function(req, res){
+	var id = req.params.id;
+
+  	Article.remove({ '_id' : id  }, function(err, article) {
+    	if (err) {
+      		res.sendStatus(500);
+      		return;
+    	}
+    	res.sendStatus(200);
+  	});
 };
 
-module.exports.DELETEpage = DELETEpage;
+
+module.exports = routes;

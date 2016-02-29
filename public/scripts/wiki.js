@@ -79,8 +79,8 @@ var ArticleBox = React.createClass({
   render: function(){
     return (
       <div className="article-box">
-        <ArticleList articles={this.props.articles}/>
-        <ArticleForm onArticleSubmit={this.props.onArticleSubmit}/>
+        <ArticleList articles={this.props.articles} />
+        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
       </div>
     );
   }
@@ -158,6 +158,20 @@ var ArticleForm = React.createClass({
       );
   }
 
+});
+
+
+var ArticleContent = React.createClass({
+  render: function(){
+    <div className="article-content">
+      <div className="article-title">
+        <h2>{this.props.title}</h2>
+      </div>
+      <div className="article-article">
+        {this.props.content}
+      </div>
+    </div>
+  }
 });
 
 

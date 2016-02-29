@@ -57,7 +57,6 @@ app.post('/editpage/:id', pages.POSTedit);
 app.delete('/deletepage/:id', pages.DELETEpage);
 
 
-
 //GET Requests for Facebook LogIn
 app.get('/auth/facebook', passport.authenticate('facebook'));
 

@@ -25,7 +25,6 @@ routes.GETallPages = function(req, res){
     })
 };
 
-
 routes.GETpage = function(req, res){
 	var id = req.params.id;
 
@@ -46,7 +45,6 @@ routes.GETpage = function(req, res){
 	    }
 	})
 };
-
 
 routes.POSTsubmit = function(req, res){
 	var b = req.body;

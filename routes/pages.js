@@ -8,7 +8,7 @@ var routes = {};
 
 routes.GETallPages = function(req, res){
 	//Get All Pages Sorted by title
-	Article.find().sort({'title': 'desc'}).exec(function(err, articles) {
+	Article.find().sort({'title': 1}).exec(function(err, articles) {
 		if (err) {
 			res.sendStatus(500);
 			return;
@@ -112,7 +112,7 @@ routes.DELETEpage = function(req, res){
       		res.sendStatus(500);
       		return;
     	}
-    	res.sendStatus(200);
+    	res.json(article);
   	});
 };
 

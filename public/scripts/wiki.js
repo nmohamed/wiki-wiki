@@ -24,8 +24,6 @@ var WikiBox = React.createClass({
       type: 'POST',
       data: article,
       success: function(data) {
-        console.log("THIS DATA: ", data);
-
         var articles = this.state.articles;
         articles.push(data);
 
@@ -75,12 +73,38 @@ var Navbar = React.createClass({
 });
 
 var ArticleBox = React.createClass({
+  getInitialState: function(){
+    return {article: {show: false}};
+  },
+  
+  handleListClick: function(article){
+    article.show = true;
+    this.setState({article: article});
+  },
+
+  handleDelete: function(id){
+    var parentThis = this;
+    $.ajax({
+      url: '/deletepage/' + id,
+      dataType: 'json',
+      type: 'DELETE',
+      data: {id: id},
+      success: function(data) {
+        parentThis.setState({article: {show: false}});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
 
   render: function(){
     return (
       <div className="article-box">
-        <ArticleList articles={this.props.articles} />
+        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
         <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
+        <ArticleContent article={this.state.article} 
+          handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
       </div>
     );
   }
@@ -88,13 +112,26 @@ var ArticleBox = React.createClass({
 });
 
 var ArticleList = React.createClass({
+  handleClick: function(id){
+    $.ajax({
+      url: '/page/' + id,
+      dataType: 'json',
+      type: 'GET',
+      data: {id: id},
+      success: function(data) {
+        this.props.handleListClick(data);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
 
   render: function(){
-    console.log(this.props);
-
+    var parentThis = this;
     var articleTitles = this.props.articles.map(function(article, index){
       return (
-        <li key={index}> {article.title} </li>
+        <li key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </li>
       );
     });
 
@@ -162,15 +199,26 @@ var ArticleForm = React.createClass({
 
 
 var ArticleContent = React.createClass({
+  getInitialState: function(){
+    return {article: this.props.article};
+  },
   render: function(){
-    <div className="article-content">
-      <div className="article-title">
-        <h2>{this.props.title}</h2>
+    var deleteButton = <p></p>;
+    if (this.props.article.show){
+      deleteButton =  <input type="button" id={this.props.article._id} value="Delete" 
+          onClick={this.props.handleDelete.bind(this, this.props.article._id)}/>;
+    }
+    return(
+      <div className="article-content">
+        <div className="article-title">
+          <h2>{this.props.article.title}</h2>
+        </div>
+        <div className="article-article">
+          {this.props.article.content}
+        </div>
+          {deleteButton}
       </div>
-      <div className="article-article">
-        {this.props.content}
-      </div>
-    </div>
+    );
   }
 });
 

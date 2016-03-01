@@ -1,4 +1,8 @@
 var username;
+var auth_id;
+$.getScript("scripts/auth.js", function(){
+  console.log("here");
+});
 
 var WikiBox = React.createClass({
 

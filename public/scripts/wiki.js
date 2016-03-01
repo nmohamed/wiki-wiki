@@ -243,6 +243,7 @@ var ArticleForm = React.createClass({
     e.preventDefault();
     var title = this.state.title;
     var content = this.state.content;
+    console.log(username);
     if (!title || !content) {
       return;
     }

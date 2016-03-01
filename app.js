@@ -25,28 +25,29 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({ secret: 'this is not a secret ;)',
-  cookie:{},
-  resave: false,
-  saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(session({ secret: 'this is not a secret ;)',
+//   cookie:{},
+//   resave: false,
+//   saveUninitialized: false }));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // app.post('/add', index.add);
 // app.post('/remove', index.remove);
 
 //When app is opened, if there is a sess.username, redirect to twotes, else login
-app.get("/", function(req, res){
-  var sess = req.session;
-  console.log(sess);
-  if (!sess.username) {
-    res.redirect("/login");
-  } else {
-    res.redirect("/");
-  }
-});
+// app.get("/", function(req, res){
+//   var sess = req.session;
+//   console.log(sess);
+//   console.log("HELLO")
+//   if (!sess.username) {
+//     res.redirect("/login");
+//   } else {
+//     res.redirect("/");
+//   }
+// });
 
-app.get('/', index.home)
+// app.get('/', index.home)
 app.get("/login", login.GETlogin);
 app.post("/createuser", login.POSTlogin);
 
@@ -57,20 +58,20 @@ app.post('/editpage/:id', pages.POSTedit);
 app.delete('/deletepage/:id', pages.DELETEpage);
 
 
-//GET Requests for Facebook LogIn
-app.get('/auth/facebook', passport.authenticate('facebook'));
+// //GET Requests for Facebook LogIn
+// app.get('/auth/facebook', passport.authenticate('facebook'));
 
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' })
-);
+// app.get('/auth/facebook/callback',
+//   passport.authenticate('facebook', { successRedirect: '/',
+//                                       failureRedirect: '/login' })
+// );
 
 
 //Logout of Facebook
-app.get("/logout", function(req, res) {
-    req.logout();
-    res.redirect("/");
-});
+// app.get("/logout", function(req, res) {
+//     req.logout();
+//     res.redirect("/");
+// });
 
 mongoose.connect('mongodb://wiki:olinjs@ds017678.mlab.com:17678/wiki', function(err){
 	if(err) console.log(err);
@@ -83,7 +84,7 @@ app.listen(PORT, function() {
 
 module.exports = app;
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-    res.send(401);
-}
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) { return next(); }
+//     res.send(401);
+// }

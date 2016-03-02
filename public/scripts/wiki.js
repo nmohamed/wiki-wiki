@@ -1,3 +1,6 @@
+var username;
+var auth_id;
+
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){
@@ -15,7 +18,6 @@ var WikiBox = React.createClass({
     });
 
   },
-
   onArticleSubmit: function(article){
 
     $.ajax({
@@ -50,7 +52,6 @@ var WikiBox = React.createClass({
 
     return (
       <div className="wiki-box">
-        <Navbar />
         <ArticleBox 
           articles={this.state.articles}
           onArticleSubmit={this.onArticleSubmit}/>
@@ -59,29 +60,28 @@ var WikiBox = React.createClass({
   }
 });
 
-var Navbar = React.createClass({
-
-  render: function(){
-    return (
-      <div className="navbar">
-        <div className="nav-header"> Movie Wiki </div>
-        <div className="login">
-          <input type="button" className="login-button" value="Login" />
-        </div>
-      </div>
-      );
-  }
-
-});
 
 var ArticleBox = React.createClass({
   getInitialState: function(){
-    return {article: {show: false}};
+    return {article: {show: false}, showForm: false};
   },
-  
+  onArticleSearch: function(articlename){
+    var parentThis = this;
+    // var queryResult=[];
+    // this.state.articles.forEach(function(person){
+    //     if(person.title.toLowerCase().indexOf(articlename.title)!=-1)
+    //     queryResult.push(person);
+    // });
+    this.props.articles.forEach(function(article){
+        if(article.title.toLowerCase() === articlename.title.toLowerCase()) {
+          article.show = true;
+          parentThis.setState({article: article});
+        }
+    });
+  },
   handleListClick: function(article){
     article.show = true;
-    this.setState({article: article});
+    this.setState({article: article, showForm: false});
   },
 
   handleDelete: function(id){
@@ -100,15 +100,116 @@ var ArticleBox = React.createClass({
     });
   },
 
+  handleAdd: function(){
+    this.setState({article: {show: false}, showForm: !this.state.showForm});
+  },
+
   render: function(){
+    var articleForm = <p></p>;
+    if (this.state.showForm){
+      articleForm = <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />;
+    }
+
     return (
       <div className="article-box">
+        <Navbar onArticleSearch={this.onArticleSearch} handleListClick={this.handleListClick}/>
+        <div className="article-box-holder">
         <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
-        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
-        <ArticleContent article={this.state.article} 
-          handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+        <div className="article-box-content">
+          {articleForm}
+          <ArticleContent article={this.state.article} 
+            handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+        </div>
+        </div>
+        <input className="add-article" type="button" onClick={this.handleAdd} value="+"/>
       </div>
     );
+  }
+
+});
+
+var Navbar = React.createClass({
+  getInitialState: function() {
+    return {user: '',loginshow:'',logoutshow:'none'};
+  },
+  loginFacebook: function(){
+    $.ajax({
+      url: '/login',
+      dataType: 'json',
+      type: 'GET',
+      success: function(data) {
+        this.setState({user: data, loginshow:'none', logoutshow:''});
+        console.log(data)
+      }.bind(this),
+      error: function(xhr, status, err) {
+        this.setState({user: '',loginshow:'',logoutshow:'none'});
+        // console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  componentDidMount: function() {
+    this.loginFacebook();
+  },
+  render: function(){
+    var loginshow = this.state.loginshow;
+    var logoutshow = this.state.logoutshow;
+    // console.log(req.session.passport);
+    return (
+      <div className="Navbar navbar navbar-default">
+        <a className="navbar-brand"> Movie Wiki </a>
+        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul className="nav navbar-nav navbar-right">
+            <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
+            <li><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
+            <li><a href="/logout" style={{display:logoutshow}}><i className="fa fa-facebook">Logout</i></a></li>
+          </ul>
+          <SearchForm onArticleSearch={this.props.onArticleSearch}/>
+        </div>
+      </div>
+      );
+  }
+});
+
+var SearchForm = React.createClass({
+
+  getInitialState: function() {
+    return {text: ''};
+  },
+
+  handleTitleChange: function(e) {
+    this.setState({title: e.target.value});
+  },
+
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var title = this.state.title;
+    if (!title) {
+      return;
+    }
+    console.log(title);
+    this.props.onArticleSearch({title:title});
+    this.setState({title: ''});
+  },
+
+  render: function(){
+
+    return(
+
+      <form className="navbar-form navbar-left" onSubmit={this.handleSubmit}>
+        <div className="form-group">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search Article Title"
+          value={this.state.title}
+          onChange={this.handleTitleChange} />
+        </div>
+        <button className="btn btn-md" type="submit">
+          <i className="fa fa-search"></i>
+        </button>
+      </form>
+
+      );
   }
 
 });
@@ -139,6 +240,11 @@ var ArticleList = React.createClass({
 
     return (
       <div className="article-list">
+        <h3><center>Users</center></h3>
+        <div className="article-list-item">Bobby McFingerson</div>
+        <div className="article-list-item">True dads TM</div>
+        <div className="article-list-item">Not Nora</div>
+        <h3><center>Articles</center></h3>
         {articleTitles}
       </div>
     );
@@ -164,7 +270,7 @@ var ArticleForm = React.createClass({
     e.preventDefault();
     var title = this.state.title;
     var content = this.state.content;
-
+    console.log(username);
     if (!title || !content) {
       return;
     }
@@ -176,20 +282,22 @@ var ArticleForm = React.createClass({
   render: function(){
 
     return(
-      <form className="article-form basic-grey" onSubmit={this.handleSubmit}>
+      <form className="article-form" onSubmit={this.handleSubmit}>
         <input
+          className="small-input"
           type="text"
           placeholder="Article Title"
           value={this.state.title}
           onChange={this.handleTitleChange} />
-
-        <input
+        <br></br>
+        <textarea
+          className="large-input"
           type="text"
           placeholder="Article content"
           value={this.state.content}
-          onChange={this.handleContentChange} />
-
-        <input type="submit" value="Add" />
+          onChange={this.handleContentChange}></textarea>
+        <br></br>
+        <input className="button" type="submit" value="Add" />
       </form>
 
       );
@@ -205,7 +313,7 @@ var ArticleContent = React.createClass({
   render: function(){
     var deleteButton = <p></p>;
     if (this.props.article.show){
-      deleteButton =  <input type="button" id={this.props.article._id} value="Delete" 
+      deleteButton =  <input className="button" type="button" id={this.props.article._id} value="Delete" 
           onClick={this.props.handleDelete.bind(this, this.props.article._id)}/>;
     }
     return(

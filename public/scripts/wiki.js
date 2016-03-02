@@ -1,8 +1,5 @@
 var username;
 var auth_id;
-$.getScript("scripts/auth.js", function(){
-  console.log("here");
-});
 
 var WikiBox = React.createClass({
 
@@ -21,7 +18,6 @@ var WikiBox = React.createClass({
     });
 
   },
-
   onArticleSubmit: function(article){
 
     $.ajax({
@@ -56,7 +52,6 @@ var WikiBox = React.createClass({
 
     return (
       <div className="wiki-box">
-        <Navbar />
         <ArticleBox 
           articles={this.state.articles}
           onArticleSubmit={this.onArticleSubmit}/>
@@ -66,6 +61,58 @@ var WikiBox = React.createClass({
 });
 
 
+var ArticleBox = React.createClass({
+  getInitialState: function(){
+    return {article: {show: false}};
+  },
+  onArticleSearch: function(articlename){
+    var parentThis = this;
+    // var queryResult=[];
+    // this.state.articles.forEach(function(person){
+    //     if(person.title.toLowerCase().indexOf(articlename.title)!=-1)
+    //     queryResult.push(person);
+    // });
+    this.props.articles.forEach(function(article){
+        if(article.title.toLowerCase() === articlename.title.toLowerCase()) {
+          article.show = true;
+          parentThis.setState({article: article});
+        }
+    });
+  },
+  handleListClick: function(article){
+    article.show = true;
+    this.setState({article: article});
+  },
+
+  handleDelete: function(id){
+    var parentThis = this;
+    $.ajax({
+      url: '/deletepage/' + id,
+      dataType: 'json',
+      type: 'DELETE',
+      data: {id: id},
+      success: function(data) {
+        parentThis.setState({article: {show: false}});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+
+  render: function(){
+    return (
+      <div className="article-box">
+        <Navbar onArticleSearch={this.onArticleSearch} handleListClick={this.handleListClick}/>
+        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
+        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
+        <ArticleContent article={this.state.article} 
+          handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+      </div>
+    );
+  }
+
+});
 
 var Navbar = React.createClass({
   getInitialState: function() {
@@ -94,53 +141,61 @@ var Navbar = React.createClass({
     var logoutshow = this.state.logoutshow;
     // console.log(req.session.passport);
     return (
-      <div className="NavBar">
-        <h1> Movie Wiki </h1>
-        <a href="/auth/facebook" style={{display:loginshow}}>Login with Facebook</a>
-        <a href="/logout" style={{display:logoutshow}}> Logout</a>
-        <p>{this.state.user.username}</p>
+      <div className="Navbar navbar navbar-default">
+        <a className="navbar-brand"> Movie Wiki </a>
+        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul className="nav navbar-nav navbar-right">
+            <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
+            <li><a href="/auth/facebook" style={{display:loginshow}}>Login with Facebook</a></li>
+            <li><a href="/logout" style={{display:logoutshow}}> Logout</a></li>
+          </ul>
+          <SearchForm onArticleSearch={this.props.onArticleSearch}/>
+        </div>
       </div>
       );
-        //     <a href="#" id="status" onClick={this.handleClick}>Login</a>
-        // <a href="#" id="statuslogout" onClick={this.handleClickLogout}>Logout</a>
   }
 });
 
-var ArticleBox = React.createClass({
-  getInitialState: function(){
-    return {article: {show: false}};
-  },
-  
-  handleListClick: function(article){
-    article.show = true;
-    this.setState({article: article});
+var SearchForm = React.createClass({
+
+  getInitialState: function() {
+    return {text: ''};
   },
 
-  handleDelete: function(id){
-    var parentThis = this;
-    $.ajax({
-      url: '/deletepage/' + id,
-      dataType: 'json',
-      type: 'DELETE',
-      data: {id: id},
-      success: function(data) {
-        parentThis.setState({article: {show: false}});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+  handleTitleChange: function(e) {
+    this.setState({title: e.target.value});
+  },
+
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var title = this.state.title;
+    if (!title) {
+      return;
+    }
+    console.log(title);
+    this.props.onArticleSearch({title:title});
+    this.setState({title: ''});
   },
 
   render: function(){
-    return (
-      <div className="article-box">
-        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
-        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
-        <ArticleContent article={this.state.article} 
-          handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
-      </div>
-    );
+
+    return(
+
+      <form className="navbar-form navbar-left" onSubmit={this.handleSubmit}>
+        <div className="form-group">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Article Title"
+          value={this.state.title}
+          onChange={this.handleTitleChange} />
+        </div>
+        <button className="btn btn-md" type="submit">
+          <i className="fa fa-search"></i>
+        </button>
+      </form>
+
+      );
   }
 
 });

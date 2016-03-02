@@ -146,8 +146,8 @@ var Navbar = React.createClass({
         <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul className="nav navbar-nav navbar-right">
             <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
-            <li><a href="/auth/facebook" style={{display:loginshow}}>Login with Facebook</a></li>
-            <li><a href="/logout" style={{display:logoutshow}}> Logout</a></li>
+            <li><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
+            <li><a href="/logout" style={{display:logoutshow}}><i className="fa fa-facebook">Logout</i></a></li>
           </ul>
           <SearchForm onArticleSearch={this.props.onArticleSearch}/>
         </div>
@@ -186,7 +186,7 @@ var SearchForm = React.createClass({
         <input
           type="text"
           className="form-control"
-          placeholder="Article Title"
+          placeholder="Search Article Title"
           value={this.state.title}
           onChange={this.handleTitleChange} />
         </div>

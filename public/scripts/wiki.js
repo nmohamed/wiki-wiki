@@ -63,9 +63,11 @@ var Navbar = React.createClass({
 
   render: function(){
     return (
-      <div className="NavBar">
-        <h1> Movie Wiki </h1>
-        <input type="button" className="login-button" value="Login" />
+      <div className="navbar">
+        <div className="nav-header"> Movie Wiki </div>
+        <div className="login">
+          <input type="button" className="login-button" value="Login" />
+        </div>
       </div>
       );
   }
@@ -131,15 +133,13 @@ var ArticleList = React.createClass({
     var parentThis = this;
     var articleTitles = this.props.articles.map(function(article, index){
       return (
-        <li key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </li>
+        <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </div>
       );
     });
 
     return (
       <div className="article-list">
-        <ul>  
-          {articleTitles}
-        </ul>
+        {articleTitles}
       </div>
     );
   }

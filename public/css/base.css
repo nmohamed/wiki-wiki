@@ -33,11 +33,8 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-  border-bottom: 1px solid #ddd;
   font-size: 2.5em;
   font-weight: bold;
-  margin: 0 0 15px;
-  padding: 0;
 }
 
 h2 {
@@ -59,72 +56,6 @@ p, ul {
 
 ul {
   padding-left: 30px;
-}
-
-.todo {
-  padding-left:45%;
-}
-.progress-button, .filter-button {
-  position: relative;
-  display: inline-block;
-  text-align: center;
-}
-
-.progress-button button {
-  display: block;
-  padding: 0;
-  margin-right: 20px;
-  width: 50px;
-  height: 25px;
-  border: 2px solid #1ECD97;
-  border-radius: 40px;
-  background: transparent;
-  color: #1ECD97;
-  letter-spacing: 1px;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-  transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-}
-
-.progress-button button:hover {
-  background-color: #1ECD97;
-  color: #fff;
-}
-
-.progress-button button:focus {
-  outline: none;
-}
-
-.filter-button button {
-  display: block;
-  padding: 0;
-  margin-right: 20px;
-  width: 75px;
-  height: 25px;
-  border: 2px solid white;
-  border-radius: 40px;
-  background: transparent;
-  color: #1ECD97;
-  letter-spacing: 1px;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-  transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-}
-
-.filter-button button:hover {
-  background-color: #1ECD97;
-  color: #fff;
-}
-
-.filter-button button:focus {
-  outline: none;
-}
-
-.todotext {
-  font-family: 'Montserrat', sans-serif;
-  display:inline-block;
 }
 
 /* Basic Grey */
@@ -225,3 +156,33 @@ ul {
 .basic-grey .button:hover {
     background: #CF7A7A
 }
+
+
+.wiki-box {
+  margin: none;
+  padding: none;
+}
+.navbar {
+  display: flex;
+  vertical-align: top;
+  background: #CFcf00;
+  padding: 10px;
+}
+.nav-header {
+  font-size: 1.5em;
+  font-weight: bold;
+  flex-grow: 1;
+}
+.login {
+  flex-grow: 1;
+}
+
+.article-box {
+  display: flex;
+}
+.article-list {}
+.article-list-item {
+  border-bottom: 1px #cccccc;
+}
+.article-form {}
+.article-content {}

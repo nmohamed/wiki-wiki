@@ -1,3 +1,7 @@
+/* 
+  Facebook login authorization management
+*/
+
 // load all the things we need
 var FacebookStrategy = require('passport-facebook').Strategy;
 

@@ -83,13 +83,20 @@ ul {
   display: flex;
 }
 .article-box-content {
+  flex-grow: 4;
+  flex-shrink: 3;
   display: flex;
   flex-direction: column;
   margin: 20px;
   margin-left: 40px;
 }
 
-.article-list {}
+.article-list {
+  width: 25%;
+  max-width: 250px;
+  min-width: 200px;
+  flex-shrink: 2;
+}
 .article-list-item {
   background: #eeeeee;
   border-radius: 4px;

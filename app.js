@@ -1,3 +1,7 @@
+/* 
+  Application. Run this using node!
+*/
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -32,8 +36,6 @@ app.use(session({ secret: 'this is not a secret ;)',
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 // app.get('/', index.home)
 app.get("/login", login.GETlogin);
 app.post("/createuser", login.POSTlogin);
@@ -53,7 +55,6 @@ app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',
                                       failureRedirect: '/' })
 );
-
 
 // Logout of Facebook
 app.get("/logout", function(req, res) {

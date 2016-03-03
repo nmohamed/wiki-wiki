@@ -1,3 +1,8 @@
+/* 
+    Client side javascript, using React.js. Builds components on webpage
+*/
+
+// Holder for the entire page
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){
@@ -72,18 +77,13 @@ var WikiBox = React.createClass({
   }
 });
 
-
+// Holder for all the content in the page
 var ArticleBox = React.createClass({
   getInitialState: function(){
     return {article: {show: false}, showForm: false};
   },
   onArticleSearch: function(articlename){
     var parentThis = this;
-    // var queryResult=[];
-    // this.state.articles.forEach(function(person){
-    //     if(person.title.toLowerCase().indexOf(articlename.title)!=-1)
-    //     queryResult.push(person);
-    // });
     this.props.articles.forEach(function(article){
         if(article.title.toLowerCase() === articlename.title.toLowerCase()) {
           article.show = true;
@@ -140,6 +140,7 @@ var ArticleBox = React.createClass({
 
 });
 
+// Navigation/header bar on the top of the page. Holds login and search bar
 var Navbar = React.createClass({
   getInitialState: function() {
     return {user: '',loginshow:'',logoutshow:'none'};
@@ -155,7 +156,6 @@ var Navbar = React.createClass({
       }.bind(this),
       error: function(xhr, status, err) {
         this.setState({user: '',loginshow:'',logoutshow:'none'});
-        // console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
   },
@@ -165,7 +165,6 @@ var Navbar = React.createClass({
   render: function(){
     var loginshow = this.state.loginshow;
     var logoutshow = this.state.logoutshow;
-    // console.log(req.session.passport);
     return (
       <div className="Navbar navbar navbar-default">
         <a className="navbar-brand"> Movie Wiki </a>
@@ -182,6 +181,7 @@ var Navbar = React.createClass({
   }
 });
 
+//Search bar in navbar that allows you to search article names
 var SearchForm = React.createClass({
 
   getInitialState: function() {
@@ -226,6 +226,7 @@ var SearchForm = React.createClass({
 
 });
 
+//Sidebar with list of all articles and users
 var ArticleList = React.createClass({
   handleClick: function(id){
     $.ajax({
@@ -266,7 +267,7 @@ var ArticleList = React.createClass({
   }
 });
 
-
+// Submission for for adding new articles
 var ArticleForm = React.createClass({
 
   getInitialState: function() {
@@ -319,7 +320,7 @@ var ArticleForm = React.createClass({
 
 });
 
-
+// Holder for the content of your article (shows title and article text)
 var ArticleContent = React.createClass({
   getInitialState: function(){
     return {article: this.props.article};

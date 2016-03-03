@@ -1,3 +1,7 @@
+/* 
+	Routes related to logging in and user management
+*/
+
 var mongoose = require('mongoose');
 var path = require('path');
 
@@ -6,8 +10,8 @@ var User = require('../models/userModel.js');
 
 var routes = {};
 
+// logs you in and adds user if you never logged in before
 routes.GETlogin = function(req, res){
-	// var id = req.params.id;
 	try {
 	    var username = req.session.passport.user.displayName;
 
@@ -31,6 +35,7 @@ routes.GETlogin = function(req, res){
 	}
 };
 
+// gets all users
 routes.GETallusers = function(req,res) {
 	User.find({}, function(err,users){
 		if (err) {
@@ -38,12 +43,11 @@ routes.GETallusers = function(req,res) {
 	      return;
 	    }
 
-	    if (!users) {
+	    if (!users) { //if no user is found
 	      res.json({"error":"user not found"});
 	      return;
 	    }
-	    else {
-	    	//get specific user and send json
+	    else { //send all users
       		res.json(users);
       		return;
 	    }
@@ -51,7 +55,6 @@ routes.GETallusers = function(req,res) {
 }
 
 routes.POSTlogin = function(req, res){
-
 };
 
 module.exports = routes;

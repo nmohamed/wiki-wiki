@@ -76,6 +76,8 @@ routes.POSTedit = function(req, res){
 	var b = req.body;
 	var id = req.params.id;
 
+	console.log("EDITTING ID: " + id);
+
 	Article.findOne({'_id' : id}, function(err,article){
 		if (err) {
 	      res.sendStatus(500);
@@ -101,7 +103,7 @@ routes.POSTedit = function(req, res){
 	          res.sendStatus(500);
 	          return;
 	        }
-	        res.sendStatus(200);
+	        res.json(article);
 	        return;
 	      })
 	    }

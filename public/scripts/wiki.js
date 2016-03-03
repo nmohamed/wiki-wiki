@@ -116,6 +116,32 @@ var ArticleBox = React.createClass({
     this.setState({article: {show: false}, showForm: !this.state.showForm});
   },
 
+  handleEdit: function(article){
+    console.log("editting article: " + article.content);
+    console.log("ID: " + article.id);
+
+    // this.setState({article: this.state.ar})
+    var parentThis =this;
+
+    $.ajax({
+      url: '/editpage/' + article.id,
+      dataType: 'json',
+      type: 'POST',
+      data: article,
+      success: function(data){
+
+        console.log("EDITTED!", this.state.article);
+        console.log("Data: ", data);
+
+        parentThis.setState({article: data});
+
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+
   render: function(){
     var articleForm = <p></p>;
     if (this.state.showForm){
@@ -129,8 +155,11 @@ var ArticleBox = React.createClass({
         <ArticleList users={this.props.users} articles={this.props.articles} handleListClick={this.handleListClick}/>
         <div className="article-box-content">
           {articleForm}
-          <ArticleContent article={this.state.article} 
-            handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+          <ArticleContent 
+            article={this.state.article} 
+            handleDelete={this.handleDelete} 
+            handleListClick={this.handleListClick} 
+            handleEdit={this.handleEdit}/>
         </div>
         </div>
         <input className="add-article" type="button" onClick={this.handleAdd} value="+"/>
@@ -325,6 +354,15 @@ var ArticleContent = React.createClass({
   getInitialState: function(){
     return {article: this.props.article};
   },
+
+  onChange: function(content){
+    this.setState({content: content.target.value});
+  },
+
+  handleBlur: function(){
+    this.sendEdit();
+  },
+
   render: function(){
     var deleteButton = <p></p>;
     if (this.props.article.show){
@@ -336,14 +374,78 @@ var ArticleContent = React.createClass({
         <div className="article-title">
           <h2>{this.props.article.title}</h2>
         </div>
-        <div className="article-article">
-          {this.props.article.content}
-        </div>
+        <ArticleText 
+          className="article-article"
+          content={this.props.article.content}
+          id={this.props.article._id}
+          edit={this.props.edit}
+          handleEdit={this.props.handleEdit}/>
         <p></p>
           {deleteButton}
       </div>
     );
   }
+});
+
+var ArticleText = React.createClass({
+
+  getInitialState: function(){
+    return {edit: false, content: this.props.content};
+  },
+
+  onChange: function(content){
+    this.setState({content: content.target.value});
+  },
+
+  handleFocus: function(){
+    this.setState({edit: true});
+  },
+
+  sendEdit: function(){
+    var article={content: this.state.content, id: this.props.id};
+    console.log(article);
+    this.props.handleEdit(article);
+    this.setState({content: this.state.content, edit:false});
+  },
+
+  handleBlur: function(){
+    this.sendEdit();
+  },
+
+  handleKey: function(key){
+    if( key.charCode == 13 || key.keyCode == 13 ){
+        key.preventDefault();
+        var content = this.state.content;
+        if( !content ){
+            return;
+        }
+        this.sendEdit();
+    }
+  },
+
+  render: function(){
+
+    if (this.state.edit){
+      return (
+          <input type='text' 
+              placeholder={this.props.content} 
+              value={this.state.content}
+              onBlur={this.handleBlur}
+              onChange={this.onChange}
+              onKeyPress={this.handleKey}
+              id={this.props.id}/>        
+      );
+    }
+    return (
+      <div onClick={this.handleFocus}>{this.props.content} </div>
+    )
+
+
+  }
+
+
+
+
 });
 
 

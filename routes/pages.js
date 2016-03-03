@@ -12,7 +12,7 @@ var routes = {};
 
 // gets all pages sorted by title
 routes.GETallPages = function(req, res){
-	Article.find().sort({'title': 1}).exec(function(err, articles) {
+	Article.find().sort({'datePosted': 1}).exec(function(err, articles) {
 		if (err) {
 			res.sendStatus(500);
 			return;

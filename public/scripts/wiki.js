@@ -119,8 +119,9 @@ var ArticleBox = React.createClass({
   handleEdit: function(article){
     console.log("editting article: " + article.content);
     console.log("ID: " + article.id);
+    console.log("title:" + article.title);
 
-    // this.setState({article: this.state.ar})
+    this.setState({article: article});
     var parentThis =this;
 
     $.ajax({
@@ -371,9 +372,13 @@ var ArticleContent = React.createClass({
     }
     return(
       <div className="article-content">
-        <div className="article-title">
-          <h2>{this.props.article.title}</h2>
-        </div>
+        <ArticleTitle 
+          className="article-title"
+          title={this.props.article.title}
+          id={this.props.article._id}
+          editTitle={this.props.editTitle}
+          handleEdit={this.props.handleEdit}/>
+
         <ArticleText 
           className="article-article"
           content={this.props.article.content}
@@ -424,10 +429,10 @@ var ArticleText = React.createClass({
   },
 
   render: function(){
-
     if (this.state.edit){
       return (
-          <input type='text' 
+          <input className="article-article"
+              type='text' 
               placeholder={this.props.content} 
               value={this.state.content}
               onBlur={this.handleBlur}
@@ -437,15 +442,64 @@ var ArticleText = React.createClass({
       );
     }
     return (
-      <div onClick={this.handleFocus}>{this.props.content} </div>
+      <div className="article-article" onClick={this.handleFocus}>{this.props.content} </div>
     )
-
-
   }
+});
 
+var ArticleTitle = React.createClass({
 
+  getInitialState: function(){
+    return {editTitle: false, title: this.props.title};
+  },
 
+  onChange: function(title){
+    this.setState({title: title.target.value});
+  },
 
+  handleFocus: function(){
+    this.setState({editTitle: true});
+  },
+
+  sendEdit: function(){
+    var article={title: this.state.title, id: this.props.id};
+    console.log(article);
+    this.props.handleEdit(article);
+    this.setState({title: this.state.title, editTitle:false});
+  },
+
+  handleBlur: function(){
+    this.sendEdit();
+  },
+
+  handleKey: function(key){
+    if( key.charCode == 13 || key.keyCode == 13 ){
+        key.preventDefault();
+        var title = this.state.title;
+        if( !title ){
+            return;
+        }
+        this.sendEdit();
+    }
+  },
+
+  render: function(){
+    if (this.state.editTitle){
+      return (
+          <input type='text' 
+              className="article-title"
+              placeholder={this.props.title} 
+              value={this.state.title}
+              onBlur={this.handleBlur}
+              onChange={this.onChange}
+              onKeyPress={this.handleKey}
+              id={this.props.id}/>        
+      );
+    }
+    return (
+      <h2 className="article-title" onClick={this.handleFocus}>{this.props.title} </h2>
+    )
+  }
 });
 
 

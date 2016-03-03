@@ -12,7 +12,7 @@ var routes = {};
 
 // gets all pages sorted by title
 routes.GETallPages = function(req, res){
-	Article.find().sort({'title': 1}).exec(function(err, articles) {
+	Article.find().sort({'datePosted': 1}).exec(function(err, articles) {
 		if (err) {
 			res.sendStatus(500);
 			return;
@@ -76,6 +76,8 @@ routes.POSTedit = function(req, res){
 	var b = req.body;
 	var id = req.params.id;
 
+	console.log("EDITTING ID: " + id);
+
 	Article.findOne({'_id' : id}, function(err,article){
 		if (err) {
 	      res.sendStatus(500);
@@ -101,7 +103,7 @@ routes.POSTedit = function(req, res){
 	          res.sendStatus(500);
 	          return;
 	        }
-	        res.sendStatus(200);
+	        res.json(article);
 	        return;
 	      })
 	    }

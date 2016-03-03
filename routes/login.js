@@ -16,7 +16,8 @@ routes.GETlogin = function(req, res){
 	    var username = req.session.passport.user.displayName;
 
 		User.findOne({username : username}, function (err, user) {
-	        if (err) {
+	        if (!user) {
+
 	        	var user = new User();
 	        	user.username = username
 
@@ -25,6 +26,7 @@ routes.GETlogin = function(req, res){
 					return;
 	            });
 	        }else{
+	        	console.log("now we're here")
             	res.json({username:username});
 				return;
 	        }

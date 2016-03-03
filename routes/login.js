@@ -8,23 +8,27 @@ var routes = {};
 
 routes.GETlogin = function(req, res){
 	// var id = req.params.id;
+	try {
+	    var username = req.session.passport.user.displayName;
 
-	var username = req.session.passport.user.displayName;
+		User.findOne({username : username}, function (err, user) {
+	        if (err) {
+	        	var user = new User();
+	        	user.username = username
 
-	User.findOne({username : username}, function (err, docs) {
-        if (err) {
-            res.json({username:username});
-			return;
-        }else{
-        	var user = new User();
-        	user.username = username
-
-            user.save(function(err){
+	            user.save(function(err){
+	            	res.json({username:username});
+					return;
+	            });
+	        }else{
             	res.json({username:username});
 				return;
-            });
-        }
-    });
+	        }
+	    });
+	}
+	catch(err) {
+		console.log(err)
+	}
 };
 
 routes.GETallusers = function(req,res) {

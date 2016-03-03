@@ -1,3 +1,8 @@
+/* 
+    Client side javascript, using React.js. Builds components on webpage
+*/
+
+// Holder for the entire page
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){
@@ -7,6 +12,7 @@ var WikiBox = React.createClass({
       dataType: 'json',
       cache: false,
       success: function(articles){
+        this.loadUsersFromServer();
         this.setState({articles: articles});
       }.bind(this),
       error: function(xhr, status, err){
@@ -15,7 +21,20 @@ var WikiBox = React.createClass({
     });
 
   },
+  loadUsersFromServer: function(){
+    $.ajax({
+      url: '/getusers',
+      dataType: 'json',
+      cache: false,
+      success: function(users){
+        this.setState({users: users});
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
 
+  },
   onArticleSubmit: function(article){
 
     $.ajax({
@@ -38,7 +57,7 @@ var WikiBox = React.createClass({
   },
 
   getInitialState: function() {
-    return {articles: []};
+    return {articles: [], users:[]};
   },
 
   componentDidMount: function() {
@@ -47,11 +66,10 @@ var WikiBox = React.createClass({
   },
 
   render: function(){
-
     return (
       <div className="wiki-box">
-        <Navbar />
         <ArticleBox 
+          users={this.state.users}
           articles={this.state.articles}
           onArticleSubmit={this.onArticleSubmit}/>
       </div>
@@ -59,27 +77,23 @@ var WikiBox = React.createClass({
   }
 });
 
-var Navbar = React.createClass({
-
-  render: function(){
-    return (
-      <div className="NavBar">
-        <h1> Movie Wiki </h1>
-        <input type="button" className="login-button" value="Login" />
-      </div>
-      );
-  }
-
-});
-
+// Holder for all the content in the page
 var ArticleBox = React.createClass({
   getInitialState: function(){
-    return {article: {show: false}};
+    return {article: {show: false}, showForm: false};
   },
-  
+  onArticleSearch: function(articlename){
+    var parentThis = this;
+    this.props.articles.forEach(function(article){
+        if(article.title.toLowerCase() === articlename.title.toLowerCase()) {
+          article.show = true;
+          parentThis.setState({article: article});
+        }
+    });
+  },
   handleListClick: function(article){
     article.show = true;
-    this.setState({article: article});
+    this.setState({article: article, showForm: false});
   },
 
   handleDelete: function(id){
@@ -98,19 +112,121 @@ var ArticleBox = React.createClass({
     });
   },
 
+  handleAdd: function(){
+    this.setState({article: {show: false}, showForm: !this.state.showForm});
+  },
+
   render: function(){
+    var articleForm = <p></p>;
+    if (this.state.showForm){
+      articleForm = <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />;
+    }
+
     return (
       <div className="article-box">
-        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
-        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
-        <ArticleContent article={this.state.article} 
-          handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+        <Navbar onArticleSearch={this.onArticleSearch} handleListClick={this.handleListClick}/>
+        <div className="article-box-holder">
+        <ArticleList users={this.props.users} articles={this.props.articles} handleListClick={this.handleListClick}/>
+        <div className="article-box-content">
+          {articleForm}
+          <ArticleContent article={this.state.article} 
+            handleDelete={this.handleDelete} handleListClick={this.handleListClick} />
+        </div>
+        </div>
+        <input className="add-article" type="button" onClick={this.handleAdd} value="+"/>
       </div>
     );
   }
 
 });
 
+// Navigation/header bar on the top of the page. Holds login and search bar
+var Navbar = React.createClass({
+  getInitialState: function() {
+    return {user: '',loginshow:'',logoutshow:'none'};
+  },
+  loginFacebook: function(){
+    $.ajax({
+      url: '/login',
+      dataType: 'json',
+      type: 'GET',
+      success: function(data) {
+        this.setState({user: data, loginshow:'none', logoutshow:''});
+        console.log(data)
+      }.bind(this),
+      error: function(xhr, status, err) {
+        this.setState({user: '',loginshow:'',logoutshow:'none'});
+      }.bind(this)
+    });
+  },
+  componentDidMount: function() {
+    this.loginFacebook();
+  },
+  render: function(){
+    var loginshow = this.state.loginshow;
+    var logoutshow = this.state.logoutshow;
+    return (
+      <div className="Navbar navbar navbar-default">
+        <a className="navbar-brand"> Movie Wiki </a>
+        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul style={{float:"right"}} className="nav navbar-nav navbar-right">
+            <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
+            <li style={{float:"right"}}><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
+            <li><a href="/logout" style={{display:logoutshow}}><i className="fa fa-facebook">Logout</i></a></li>
+          </ul>
+          <SearchForm onArticleSearch={this.props.onArticleSearch}/>
+        </div>
+      </div>
+      );
+  }
+});
+
+//Search bar in navbar that allows you to search article names
+var SearchForm = React.createClass({
+
+  getInitialState: function() {
+    return {text: ''};
+  },
+
+  handleTitleChange: function(e) {
+    this.setState({title: e.target.value});
+  },
+
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var title = this.state.title;
+    if (!title) {
+      return;
+    }
+    console.log(title);
+    this.props.onArticleSearch({title:title});
+    this.setState({title: ''});
+  },
+
+  render: function(){
+
+    return(
+
+      <form className="navbar-form navbar-left" onSubmit={this.handleSubmit}>
+        <div className="form-group">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search Article Title"
+          value={this.state.title}
+          onChange={this.handleTitleChange} />
+        </div>
+        <button className="btn btn-md" type="submit">
+          <i className="fa fa-search"></i>
+        </button>
+      </form>
+
+      );
+  }
+
+});
+
+//Sidebar with list of all articles and users
 var ArticleList = React.createClass({
   handleClick: function(id){
     $.ajax({
@@ -131,21 +247,27 @@ var ArticleList = React.createClass({
     var parentThis = this;
     var articleTitles = this.props.articles.map(function(article, index){
       return (
-        <li key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </li>
+        <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(null, article._id)}> {article.title} </div>
+      );
+    });
+    var usersNames = this.props.users.map(function(user, index){
+      return (
+        <div className="article-list-item" key={index}> {user.username} </div>
       );
     });
 
     return (
       <div className="article-list">
-        <ul>  
-          {articleTitles}
-        </ul>
+        <h3><center>Users</center></h3>
+        {usersNames}
+        <h3><center>Articles</center></h3>
+        {articleTitles}
       </div>
     );
   }
 });
 
-
+// Submission for for adding new articles
 var ArticleForm = React.createClass({
 
   getInitialState: function() {
@@ -164,7 +286,6 @@ var ArticleForm = React.createClass({
     e.preventDefault();
     var title = this.state.title;
     var content = this.state.content;
-
     if (!title || !content) {
       return;
     }
@@ -176,20 +297,22 @@ var ArticleForm = React.createClass({
   render: function(){
 
     return(
-      <form className="article-form basic-grey" onSubmit={this.handleSubmit}>
+      <form className="article-form" onSubmit={this.handleSubmit}>
         <input
+          className="small-input"
           type="text"
           placeholder="Article Title"
           value={this.state.title}
           onChange={this.handleTitleChange} />
-
-        <input
+        <br></br>
+        <textarea
+          className="large-input"
           type="text"
           placeholder="Article content"
           value={this.state.content}
-          onChange={this.handleContentChange} />
-
-        <input type="submit" value="Add" />
+          onChange={this.handleContentChange}></textarea>
+        <br></br>
+        <input className="button" type="submit" value="Add" />
       </form>
 
       );
@@ -197,7 +320,7 @@ var ArticleForm = React.createClass({
 
 });
 
-
+// Holder for the content of your article (shows title and article text)
 var ArticleContent = React.createClass({
   getInitialState: function(){
     return {article: this.props.article};
@@ -205,8 +328,8 @@ var ArticleContent = React.createClass({
   render: function(){
     var deleteButton = <p></p>;
     if (this.props.article.show){
-      deleteButton =  <input type="button" id={this.props.article._id} value="Delete" 
-          onClick={this.props.handleDelete.bind(this, this.props.article._id)}/>;
+      deleteButton =  <input className="button" type="button" id={this.props.article._id} value="Delete" 
+          onClick={this.props.handleDelete.bind(null, this.props.article._id)}/>;
     }
     return(
       <div className="article-content">
@@ -216,6 +339,7 @@ var ArticleContent = React.createClass({
         <div className="article-article">
           {this.props.article.content}
         </div>
+        <p></p>
           {deleteButton}
       </div>
     );

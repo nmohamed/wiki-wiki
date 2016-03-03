@@ -1,3 +1,7 @@
+/* 
+	Routes for getting/posting/deleting articles
+*/
+
 var mongoose = require('mongoose');
 var path = require('path');
 
@@ -6,8 +10,8 @@ var User = require('../models/userModel.js');
 
 var routes = {};
 
+// gets all pages sorted by title
 routes.GETallPages = function(req, res){
-	//Get All Pages Sorted by title
 	Article.find().sort({'title': 1}).exec(function(err, articles) {
 		if (err) {
 			res.sendStatus(500);
@@ -25,6 +29,7 @@ routes.GETallPages = function(req, res){
     })
 };
 
+//gets single page
 routes.GETpage = function(req, res){
 	var id = req.params.id;
 
@@ -38,14 +43,14 @@ routes.GETpage = function(req, res){
 	      res.json({"error":"article not found"});
 	      return;
 	    }
-	    else {
-	    	//get specific article and send json
+	    else { //get specific article and send json
       		res.json(article);
       		return;
 	    }
 	})
 };
 
+//posts new article to DB
 routes.POSTsubmit = function(req, res){
 	var b = req.body;
 
@@ -66,7 +71,7 @@ routes.POSTsubmit = function(req, res){
 	})
 };
 
-
+//posts edited article to DB (IN THE WORKS)
 routes.POSTedit = function(req, res){
 	var b = req.body;
 	var id = req.params.id;
@@ -103,7 +108,7 @@ routes.POSTedit = function(req, res){
 	})
 };
 
-
+// delete page from DB
 routes.DELETEpage = function(req, res){
 	var id = req.params.id;
 

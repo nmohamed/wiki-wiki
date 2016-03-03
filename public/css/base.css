@@ -33,11 +33,8 @@ h1, h2, h3, h4 {
 }
 
 h1 {
-  border-bottom: 1px solid #ddd;
   font-size: 2.5em;
   font-weight: bold;
-  margin: 0 0 15px;
-  padding: 0;
 }
 
 h2 {
@@ -61,109 +58,67 @@ ul {
   padding-left: 30px;
 }
 
-.todo {
-  padding-left:45%;
+.wiki-box {
+  margin: none;
+  padding: none;
 }
-.progress-button, .filter-button {
-  position: relative;
-  display: inline-block;
-  text-align: center;
+.navbar {
+  display: flex;
+  vertical-align: top;
+  background: #CFcf00;
+  padding: 10px;
 }
-
-.progress-button button {
-  display: block;
-  padding: 0;
-  margin-right: 20px;
-  width: 50px;
-  height: 25px;
-  border: 2px solid #1ECD97;
-  border-radius: 40px;
-  background: transparent;
-  color: #1ECD97;
-  letter-spacing: 1px;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-  transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
+.nav-header {
+  font-size: 1.5em;
+  font-weight: bold;
+  flex-grow: 1;
+}
+.login {
+  flex-grow: 1;
 }
 
-.progress-button button:hover {
-  background-color: #1ECD97;
-  color: #fff;
+.article-box {
+}
+.article-box-holder {
+  display: flex;
+}
+.article-box-content {
+  flex-grow: 4;
+  flex-shrink: 3;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  margin-left: 40px;
 }
 
-.progress-button button:focus {
-  outline: none;
+.article-list {
+  width: 25%;
+  max-width: 250px;
+  min-width: 200px;
+  flex-shrink: 2;
 }
+.article-list-item {
+  background: #eeeeee;
+  border-radius: 4px;
+  margin: 3px;
+  padding: 7px;
+  opacity: .75;
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+.article-list-item:hover{
+  opacity: 1;
+}
+.article-content {}
 
-.filter-button button {
-  display: block;
-  padding: 0;
-  margin-right: 20px;
-  width: 75px;
-  height: 25px;
-  border: 2px solid white;
-  border-radius: 40px;
-  background: transparent;
-  color: #1ECD97;
-  letter-spacing: 1px;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-  transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-}
+.article-form {}
 
-.filter-button button:hover {
-  background-color: #1ECD97;
-  color: #fff;
-}
-
-.filter-button button:focus {
-  outline: none;
-}
-
-.todotext {
-  font-family: 'Montserrat', sans-serif;
-  display:inline-block;
-}
-
-/* Basic Grey */
-.basic-grey {
-    margin-left:auto;
-    margin-right:auto;
-    max-width: 100%;
-    padding: 25px 15px 25px 25%;
-    font: 12px Georgia, "Times New Roman", Times, serif;
-    color: #888;
-    text-shadow: 1px 1px 1px #FFF;
-    border:1px solid #E4E4E4;
-}
-.basic-grey h1 {
-    font-size: 25px;
-    padding: 0px 0px 10px 40px;
-    display: block;
-    border-bottom:1px solid #E4E4E4;
-    margin: -10px -15px 30px -10px;;
-    color: #888;
-}
-.basic-grey h1>span {
-    display: block;
-    font-size: 11px;
-}
-.basic-grey label {
-    display: block;
-    margin: 0px;
-}
-.basic-grey label>span {
-    float: left;
-    width: 20%;
-    text-align: right;
-    padding-right: 10px;
-    margin-top: 10px;
-    color: #888;
-}
-.basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+.small-input, .large-input {
     border: 1px solid #DADADA;
+      transition: border .25s ease-in-out;
+     -moz-transition: border .25s ease-in-out;
+     -webkit-transition: border .25s ease-in-out;
     color: #888;
     height: 30px;
     margin-bottom: 16px;
@@ -171,57 +126,67 @@ ul {
     margin-top: 2px;
     outline: 0 none;
     padding: 3px 3px 3px 5px;
-    width: 70%;
-    font-size: 12px;
     line-height:15px;
-    box-shadow: inset 0px 1px 4px #ECECEC;
-    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
-    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
 }
-.basic-grey input[type="submit"] {
-  display: block;
-  padding: 0;
-  margin-right: 20px;
-  width: 50px;
-  height: 25px;
-  border: 2px solid #148a66;
-  border-radius: 40px;
-  background: transparent;
-  color: #148a66;
-  letter-spacing: 1px;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  outline: none;
-  -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
-  transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
+
+.large-input{
+  height: 200px;
+  width: 250%;
 }
-.basic-grey textarea{
-    padding: 5px 3px 3px 5px;
+
+.small-input:focus, .small-input:hover, .large-input:focus, .large-input:hover {
+    border: 1px solid #FFA500;
 }
-.basic-grey select {
-    background: #FFF url('down-arrow.png') no-repeat right;
-    background: #FFF url('down-arrow.png') no-repeat right);
-    appearance:none;
-    -webkit-appearance:none; 
-    -moz-appearance: none;
-    text-indent: 0.01px;
-    text-overflow: '';
-    width: 70%;
-    height: 35px;
-    line-height: 25px;
+
+.add-article {
+  position: fixed;
+  bottom: 7%;
+  right: 7%;
+  background: #ffa500;
+    transition: background-color .2s ease-in-out;
+   -moz-transition: background-color .2s ease-in-out;
+   -webkit-transition: background-color .2s ease-in-out;
+  height: 60px;
+  width: 60px;
+  border-radius: 30px;
+  border: none;
+  font-size: 30px;
+  text-align: center;
+  text-decoration: bold;
+  color: #fff;
+  text-shadow: 2px 2px #e59400;
+  box-shadow: 5px 5px 10px #cccccc;
 }
-.basic-grey textarea{
-    height:100px;
+
+.add-article:hover {
+  background-color: #00DE7F;
+  text-shadow: 2px 2px #1AA368;
 }
-.basic-grey .button {
-    background: #E27575;
-    border: none;
-    padding: 10px 25px 10px 25px;
-    color: #FFF;
-    box-shadow: 1px 1px 5px #B6B6B6;
-    border-radius: 3px;
-    text-shadow: 1px 1px 1px #9E3F3F;
+
+.add-article:active {
+  background-color: #1AA368;
+  text-shadow: 2px 2px #244638;
 }
-.basic-grey .button:hover {
-    background: #CF7A7A
+
+.button {
+  margin: 10px;
+  padding: 10px;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #6496c8;
+    transition: background-color .25s ease-in-out;
+   -moz-transition: background-color .25s ease-in-out;
+   -webkit-transition: background-color .25s ease-in-out;
+  text-shadow: 1px 1px #417cb8;
+  border: none;
+}
+
+.button:hover {
+  background-color: #346392;
+  text-shadow: 1px 1px #27496d;
+}
+
+.button:active {
+  background-color: #27496d;
+  text-shadow: 1px 1px #193047;
 }

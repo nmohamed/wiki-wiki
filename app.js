@@ -1,3 +1,7 @@
+/* 
+  Application. Run this using node!
+*/
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -32,23 +36,10 @@ app.use(session({ secret: 'this is not a secret ;)',
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.post('/add', index.add);
-// app.post('/remove', index.remove);
-
-//When app is opened, if there is a sess.username, redirect to twotes, else login
-app.get("/", function(req, res){
-  var sess = req.session;
-  console.log(sess);
-  if (!sess.username) {
-    res.redirect("/login");
-  } else {
-    res.redirect("/");
-  }
-});
-
-app.get('/', index.home)
+// app.get('/', index.home)
 app.get("/login", login.GETlogin);
 app.post("/createuser", login.POSTlogin);
+app.get("/getusers", login.GETallusers);
 
 app.get('/allpages', pages.GETallPages);
 app.get('/page/:id', pages.GETpage);
@@ -62,11 +53,10 @@ app.get('/auth/facebook', passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' })
+                                      failureRedirect: '/' })
 );
 
-
-//Logout of Facebook
+// Logout of Facebook
 app.get("/logout", function(req, res) {
     req.logout();
     res.redirect("/");
@@ -85,5 +75,5 @@ module.exports = app;
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-    res.send(401);
+    res.redirect("/login");
 }

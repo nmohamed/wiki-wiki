@@ -1,3 +1,7 @@
+/* 
+	Routes related to logging in and user management
+*/
+
 var mongoose = require('mongoose');
 var path = require('path');
 
@@ -6,30 +10,51 @@ var User = require('../models/userModel.js');
 
 var routes = {};
 
+// logs you in and adds user if you never logged in before
 routes.GETlogin = function(req, res){
-	var id = req.params.id;
+	try {
+	    var username = req.session.passport.user.displayName;
 
-	User.findOne({'_id' : id}, function(err,user){
+		User.findOne({username : username}, function (err, user) {
+	        if (err) {
+	        	var user = new User();
+	        	user.username = username
+
+	            user.save(function(err){
+	            	res.json({username:username});
+					return;
+	            });
+	        }else{
+            	res.json({username:username});
+				return;
+	        }
+	    });
+	}
+	catch(err) {
+		console.log(err)
+	}
+};
+
+// gets all users
+routes.GETallusers = function(req,res) {
+	User.find({}, function(err,users){
 		if (err) {
 	      res.sendStatus(500);
 	      return;
 	    }
 
-	    if (!user) {
+	    if (!users) { //if no user is found
 	      res.json({"error":"user not found"});
 	      return;
 	    }
-	    else {
-	    	//get specific user and send json
-      		res.json(user);
+	    else { //send all users
+      		res.json(users);
       		return;
 	    }
 	})
-};
-
+}
 
 routes.POSTlogin = function(req, res){
-	res.json({message:'Login successful'});
 };
 
 module.exports = routes;

@@ -390,6 +390,7 @@ var ArticleContent = React.createClass({
   }
 });
 
+//ArticleText has all of the contenteditable functionality for editing article text
 var ArticleText = React.createClass({
 
   getInitialState: function(){
@@ -444,6 +445,7 @@ var ArticleText = React.createClass({
   }
 });
 
+//ArticleTitle has all of the functionality for the contenteditable of the article title 
 var ArticleTitle = React.createClass({
 
   getInitialState: function(){

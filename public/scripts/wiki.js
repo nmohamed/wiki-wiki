@@ -61,7 +61,6 @@ var WikiBox = React.createClass({
   },
 
   render: function(){
-    console.log(this.state.users)
     return (
       <div className="wiki-box">
         <ArticleBox 
@@ -171,9 +170,9 @@ var Navbar = React.createClass({
       <div className="Navbar navbar navbar-default">
         <a className="navbar-brand"> Movie Wiki </a>
         <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul className="nav navbar-nav navbar-right">
+          <ul style={{float:"right"}} className="nav navbar-nav navbar-right">
             <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
-            <li><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
+            <li style={{float:"right"}}><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
             <li><a href="/logout" style={{display:logoutshow}}><i className="fa fa-facebook">Logout</i></a></li>
           </ul>
           <SearchForm onArticleSearch={this.props.onArticleSearch}/>
@@ -247,7 +246,7 @@ var ArticleList = React.createClass({
     var parentThis = this;
     var articleTitles = this.props.articles.map(function(article, index){
       return (
-        <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </div>
+        <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(null, article._id)}> {article.title} </div>
       );
     });
     var usersNames = this.props.users.map(function(user, index){
@@ -329,7 +328,7 @@ var ArticleContent = React.createClass({
     var deleteButton = <p></p>;
     if (this.props.article.show){
       deleteButton =  <input className="button" type="button" id={this.props.article._id} value="Delete" 
-          onClick={this.props.handleDelete.bind(this, this.props.article._id)}/>;
+          onClick={this.props.handleDelete.bind(null, this.props.article._id)}/>;
     }
     return(
       <div className="article-content">

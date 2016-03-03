@@ -198,10 +198,10 @@ var Navbar = React.createClass({
     return (
       <div className="Navbar navbar navbar-default">
         <a className="navbar-brand"> Movie Wiki </a>
-        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul style={{float:"right"}} className="nav navbar-nav navbar-right">
+        <div>
+          <ul className="nav navbar-nav navbar-right">
             <li><a style={{color:"#148a66"}}>{this.state.user.username}</a></li>
-            <li style={{float:"right"}}><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
+            <li><a href="/auth/facebook" style={{display:loginshow}}><i className="fa fa-facebook">Login</i></a></li>
             <li><a href="/logout" style={{display:logoutshow}}><i className="fa fa-facebook">Logout</i></a></li>
           </ul>
           <SearchForm onArticleSearch={this.props.onArticleSearch}/>

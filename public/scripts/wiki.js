@@ -71,7 +71,8 @@ var WikiBox = React.createClass({
         <ArticleBox 
           users={this.state.users}
           articles={this.state.articles}
-          onArticleSubmit={this.onArticleSubmit}/>
+          onArticleSubmit={this.onArticleSubmit}
+          loadUsersFromServer={this.loadUsersFromServer}/>
       </div>
     );
   }
@@ -117,9 +118,6 @@ var ArticleBox = React.createClass({
   },
 
   handleEdit: function(article){
-    console.log("editting article: " + article.content);
-    console.log("ID: " + article.id);
-    console.log("title:" + article.title);
 
     this.setState({article: article});
     var parentThis =this;
@@ -160,7 +158,8 @@ var ArticleBox = React.createClass({
             article={this.state.article} 
             handleDelete={this.handleDelete} 
             handleListClick={this.handleListClick} 
-            handleEdit={this.handleEdit}/>
+            handleEdit={this.handleEdit}
+            loadUsersFromServer={this.props.loadUsersFromServer}/>
         </div>
         </div>
         <input className="add-article" type="button" onClick={this.handleAdd} value="+"/>
@@ -377,8 +376,9 @@ var ArticleContent = React.createClass({
           title={this.props.article.title}
           id={this.props.article._id}
           editTitle={this.props.editTitle}
-          handleEdit={this.props.handleEdit}/>
-
+          handleEdit={this.props.handleEdit}
+          loadUsersFromServer={this.props.loadUsersFromServer}/>
+        <br/> 
         <ArticleText 
           className="article-article"
           content={this.props.article.content}
@@ -408,7 +408,6 @@ var ArticleText = React.createClass({
 
   sendEdit: function(){
     var article={content: this.state.content, id: this.props.id};
-    console.log(article);
     this.props.handleEdit(article);
     this.setState({content: this.state.content, edit:false});
   },
@@ -466,6 +465,7 @@ var ArticleTitle = React.createClass({
     console.log(article);
     this.props.handleEdit(article);
     this.setState({title: this.state.title, editTitle:false});
+    this.props.loadUsersFromServer();
   },
 
   handleBlur: function(){
@@ -504,6 +504,6 @@ var ArticleTitle = React.createClass({
 
 
 ReactDOM.render(
-  <WikiBox url="/" pollInterval={5000} />,
+  <WikiBox url="/" pollInterval={2000} />,
   document.getElementById('content')
 );

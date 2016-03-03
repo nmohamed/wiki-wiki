@@ -36,7 +36,6 @@ var WikiBox = React.createClass({
 
   },
   onArticleSubmit: function(article){
-
     $.ajax({
       url: '/submitpage',
       dataType: 'json',
@@ -116,6 +115,24 @@ var ArticleBox = React.createClass({
     this.setState({article: {show: false}, showForm: !this.state.showForm});
   },
 
+  handleEdit: function(article){
+    // var parentThis = this;
+    // console.log("edit article: " , article);
+    // $.ajax({
+    //   url: '/editpage/' + article.id,
+    //   dataType: 'json',
+    //   type: 'POST',
+    //   data: article,
+    //   success: function(data) {
+    //     console.log("article editted!");
+    //     this.loadArticlesFromServer();
+    //   }.bind(this),
+    //   error: function(xhr, status, err) {
+    //     console.error(this.props.url, status, err.toString());
+    //   }.bind(this)
+    // });
+  },
+
   render: function(){
     var articleForm = <p></p>;
     if (this.state.showForm){
@@ -134,6 +151,13 @@ var ArticleBox = React.createClass({
         </div>
         </div>
         <input className="add-article" type="button" onClick={this.handleAdd} value="+"/>
+        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
+        <ArticleForm onArticleSubmit={this.props.onArticleSubmit} />
+        <ArticleContent 
+            article={this.state.article} 
+            handleDelete={this.handleDelete} 
+            handleListClick={this.handleListClick} 
+            handleEdit={this.handleEdit} />
       </div>
     );
   }
@@ -245,6 +269,7 @@ var ArticleList = React.createClass({
 
   render: function(){
     var parentThis = this;
+    console.log("Articles: ", this.props.articles);
     var articleTitles = this.props.articles.map(function(article, index){
       return (
         <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(null, article._id)}> {article.title} </div>
@@ -323,8 +348,19 @@ var ArticleForm = React.createClass({
 // Holder for the content of your article (shows title and article text)
 var ArticleContent = React.createClass({
   getInitialState: function(){
-    return {article: this.props.article};
+    return {editContent:false, article: this.props.article};
   },
+
+  onChange: function(content){
+    this.setState({content:content.content.target.value});
+  },
+
+  hanldeBlur: function(){
+    this.props.handleEdit({id: this.props.article._id, content:this.props.article.content});
+    this.setState({content:this.props.content, editContent:false})    
+  },
+
+
   render: function(){
     var deleteButton = <p></p>;
     if (this.props.article.show){

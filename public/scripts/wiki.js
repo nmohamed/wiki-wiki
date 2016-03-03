@@ -128,9 +128,7 @@ var ArticleBox = React.createClass({
       type: 'POST',
       data: article,
       success: function(data){
-
-        console.log("EDITTED!", this.state.article);
-        console.log("Data: ", data);
+        data.show=true;
 
         parentThis.setState({article: data});
 
@@ -497,7 +495,7 @@ var ArticleTitle = React.createClass({
       );
     }
     return (
-      <h2 className="article-title" onClick={this.handleFocus}>{this.props.title} </h2>
+      <h2 onClick={this.handleFocus}>{this.props.title} </h2>
     )
   }
 });

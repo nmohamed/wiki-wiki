@@ -1,6 +1,3 @@
-var username;
-var auth_id;
-
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){
@@ -10,7 +7,22 @@ var WikiBox = React.createClass({
       dataType: 'json',
       cache: false,
       success: function(articles){
+        this.loadUsersFromServer();
         this.setState({articles: articles});
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+
+  },
+  loadUsersFromServer: function(){
+    $.ajax({
+      url: '/getusers',
+      dataType: 'json',
+      cache: false,
+      success: function(users){
+        this.setState({users: users});
       }.bind(this),
       error: function(xhr, status, err){
         console.error(this.props.url, status, err.toString());
@@ -40,7 +52,7 @@ var WikiBox = React.createClass({
   },
 
   getInitialState: function() {
-    return {articles: []};
+    return {articles: [], users:[]};
   },
 
   componentDidMount: function() {
@@ -49,10 +61,11 @@ var WikiBox = React.createClass({
   },
 
   render: function(){
-
+    console.log(this.state.users)
     return (
       <div className="wiki-box">
         <ArticleBox 
+          users={this.state.users}
           articles={this.state.articles}
           onArticleSubmit={this.onArticleSubmit}/>
       </div>
@@ -114,7 +127,7 @@ var ArticleBox = React.createClass({
       <div className="article-box">
         <Navbar onArticleSearch={this.onArticleSearch} handleListClick={this.handleListClick}/>
         <div className="article-box-holder">
-        <ArticleList articles={this.props.articles} handleListClick={this.handleListClick}/>
+        <ArticleList users={this.props.users} articles={this.props.articles} handleListClick={this.handleListClick}/>
         <div className="article-box-content">
           {articleForm}
           <ArticleContent article={this.state.article} 
@@ -237,13 +250,16 @@ var ArticleList = React.createClass({
         <div className="article-list-item" key={index} onClick={parentThis.handleClick.bind(this, article._id)}> {article.title} </div>
       );
     });
+    var usersNames = this.props.users.map(function(user, index){
+      return (
+        <div className="article-list-item" key={index}> {user.username} </div>
+      );
+    });
 
     return (
       <div className="article-list">
         <h3><center>Users</center></h3>
-        <div className="article-list-item">Bobby McFingerson</div>
-        <div className="article-list-item">True dads TM</div>
-        <div className="article-list-item">Not Nora</div>
+        {usersNames}
         <h3><center>Articles</center></h3>
         {articleTitles}
       </div>
@@ -270,7 +286,6 @@ var ArticleForm = React.createClass({
     e.preventDefault();
     var title = this.state.title;
     var content = this.state.content;
-    console.log(username);
     if (!title || !content) {
       return;
     }

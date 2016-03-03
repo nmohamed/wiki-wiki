@@ -37,6 +37,7 @@ app.use(passport.session());
 // app.get('/', index.home)
 app.get("/login", login.GETlogin);
 app.post("/createuser", login.POSTlogin);
+app.get("/getusers", login.GETallusers);
 
 app.get('/allpages', pages.GETallPages);
 app.get('/page/:id', pages.GETpage);

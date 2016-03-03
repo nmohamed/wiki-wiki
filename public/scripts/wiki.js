@@ -338,6 +338,7 @@ var ArticleContent = React.createClass({
         <div className="article-article">
           {this.props.article.content}
         </div>
+        <p></p>
           {deleteButton}
       </div>
     );

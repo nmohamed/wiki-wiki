@@ -148,6 +148,7 @@ ul {
   text-decoration: bold;
   color: #fff;
   text-shadow: 2px 2px #e59400;
+  box-shadow: 5px 5px 10px #cccccc;
 }
 
 .add-article:hover {
@@ -162,9 +163,7 @@ ul {
 
 .button {
   margin: 10px;
-  padding: 5px;
-  padding-left: 7px;
-  padding-right: 7px;
+  padding: 10px;
   color: #fff;
   border-radius: 5px;
   background-color: #6496c8;

@@ -1,4 +1,4 @@
-/* 
+/*
 	Routes related to logging in and user management
 */
 
@@ -12,7 +12,11 @@ var routes = {};
 
 // logs you in and adds user if you never logged in before
 routes.GETlogin = function(req, res){
+        // try catch is generally just used for sync code, for async handle errs returned from functions,
+        // if you want to have a similar syntax as try catch for your async code look into promises,
+        // they are pretty cool
 	try {
+            // could probably use req.user to be clearer and more consise
 	    var username = req.session.passport.user.displayName;
 
 		User.findOne({username : username}, function (err, user) {
@@ -56,6 +60,7 @@ routes.GETallusers = function(req,res) {
 	})
 }
 
+// what is this here for?
 routes.POSTlogin = function(req, res){
 };
 

@@ -1,4 +1,4 @@
-/* 
+/*
 	Routes for getting/posting/deleting articles
 */
 

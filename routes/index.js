@@ -2,6 +2,7 @@
 	Home route
 */
 
+// do you need all of your mongoose stuff here?
 var mongoose = require('mongoose');
 var path = require('path');
 

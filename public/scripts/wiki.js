@@ -6,7 +6,7 @@
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){
-
+    // if you only use jquery for ajax I would look into the new fetch standard, its very similar and you don't need any new deps
     $.ajax({
       url: '/allpages',
       dataType: 'json',
@@ -84,6 +84,7 @@ var ArticleBox = React.createClass({
     return {article: {show: false}, showForm: false};
   },
   onArticleSearch: function(articlename){
+    // is there a reason you rename this a bunch but then use both names in most of your functions?
     var parentThis = this;
     this.props.articles.forEach(function(article){
         if(article.title.toLowerCase() === articlename.title.toLowerCase()) {

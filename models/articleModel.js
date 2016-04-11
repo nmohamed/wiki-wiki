@@ -8,4 +8,6 @@ var article = mongoose.Schema({
 
 }, {collection: "articles"});
 
+
+// Mongoose is weird and always looks for the capital plural. This should techincally be mongoose.model("Articles", article).
 module.exports = mongoose.model("articles", article);

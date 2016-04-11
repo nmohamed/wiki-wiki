@@ -3,6 +3,8 @@
 */
 
 // Holder for the entire page
+
+// PLZZZ comment your code --> document accordingly what each method does.
 var WikiBox = React.createClass({
 
   loadArticlesFromServer: function(){

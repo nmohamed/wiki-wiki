@@ -1,7 +1,7 @@
 /* 
 	Routes related to logging in and user management
 */
-
+// No need to repeat the importing of those two. They are not used in this file.
 var mongoose = require('mongoose');
 var path = require('path');
 
@@ -26,6 +26,7 @@ routes.GETlogin = function(req, res){
 					return;
 	            });
 	        }else{
+	        	// It's always good to remove all log statements when you push code to prod/master.
 	        	console.log("now we're here")
             	res.json({username:username});
 				return;
